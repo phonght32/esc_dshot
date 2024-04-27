@@ -29,7 +29,10 @@ extern "C" {
 
 #include "err_code.h"
 
-#define DSHOT_FRAME_SZIE 	16
+#define DSHOT_FRAME_SIZE 	16
+#define DSHOT_DMA_BUFFER 	18
+
+typedef err_code_t (*esc_dshot_func_send_dma)(uint32_t *buf_send);
 
 /**
  * @brief   Handle structure.
@@ -50,8 +53,9 @@ typedef enum {
  * @brief   Configuration structure.
  */
 typedef struct {
-	uint32_t 				tim_freq;			/*!< Timer clock frequency in Hz */
-	esc_dshot_type_t 		dshot_type;			/*!< Dshot type */
+	uint32_t 					tim_freq;			/*!< Timer clock frequency in Hz */
+	esc_dshot_type_t 			dshot_type;			/*!< Dshot type */
+	esc_dshot_func_send_dma 	send_dma;			/*!< Function send DMA */
 } esc_dshot_cfg_t;
 
 /*
@@ -116,6 +120,31 @@ err_code_t esc_dshot_get_timer_config(esc_dshot_handle_t handle, uint32_t *tick_
  *      - Others:           Fail.
  */
 err_code_t esc_dshot_prepare_packet(esc_dshot_handle_t handle, uint16_t throttle, uint16_t *packet);
+
+/*
+ * @brief   Prepare packet DMA.
+ *
+ * @param 	handle Handle structure.
+ * @param 	throttle Throttle value.
+ * @param 	packet_dma Output packet.
+ *
+ * @return
+ *      - ERR_CODE_SUCCESS: Success.
+ *      - Others:           Fail.
+ */
+err_code_t esc_dshot_prepare_packet_dma(esc_dshot_handle_t handle, uint16_t throttle, uint32_t *packet_dma);
+
+/*
+ * @brief   Send packet DMA.
+ *
+ * @param 	handle Handle structure.
+ * @param 	packet_dma Packet DMA.
+ *
+ * @return
+ *      - ERR_CODE_SUCCESS: Success.
+ *      - Others:           Fail.
+ */
+err_code_t esc_dshot_send_packet_dma(esc_dshot_handle_t handle, uint32_t *packet_dma);
 
 #ifdef __cplusplus
 }
