@@ -29,6 +29,8 @@ extern "C" {
 
 #include "err_code.h"
 
+#define DSHOT_FRAME_SZIE 	16
+
 /**
  * @brief   Handle structure.
  */
@@ -48,6 +50,7 @@ typedef enum {
  * @brief   Configuration structure.
  */
 typedef struct {
+	uint32_t 				tim_freq;			/*!< Timer clock frequency in Hz */
 	esc_dshot_type_t 		dshot_type;			/*!< Dshot type */
 } esc_dshot_cfg_t;
 
@@ -77,7 +80,7 @@ esc_dshot_handle_t esc_dshot_init(void);
 err_code_t esc_dshot_set_config(esc_dshot_handle_t handle, esc_dshot_cfg_t config);
 
 /*
- * @brief   Configure ESC_DSHOT to run.
+ * @brief   Configure Dshot to run.
  *
  * @param 	handle Handle structure.
  *
@@ -86,6 +89,33 @@ err_code_t esc_dshot_set_config(esc_dshot_handle_t handle, esc_dshot_cfg_t confi
  *      - Others:           Fail.
  */
 err_code_t esc_dshot_config(esc_dshot_handle_t handle);
+
+/*
+ * @brief   Get configuration parameter for timer.
+ *
+ * @param 	handle Handle structure.
+ * @param 	tick_bit Number of tick for 1 bit data.
+ * @param 	tick_bit1_high Number of tick for bit 1 in high level.
+ * @param 	tick_bit0_high Number of tick for bit 0 in high level.
+ *
+ * @return
+ *      - ERR_CODE_SUCCESS: Success.
+ *      - Others:           Fail.
+ */
+err_code_t esc_dshot_get_timer_config(esc_dshot_handle_t handle, uint32_t *tick_bit, uint32_t *tick_bit1_high, uint32_t *tick_bit0_high);
+
+/*
+ * @brief   Prepare packet.
+ *
+ * @param 	handle Handle structure.
+ * @param 	throttle Throttle value.
+ * @param 	packet Output packet.
+ *
+ * @return
+ *      - ERR_CODE_SUCCESS: Success.
+ *      - Others:           Fail.
+ */
+err_code_t esc_dshot_prepare_packet(esc_dshot_handle_t handle, uint16_t throttle, uint16_t *packet);
 
 #ifdef __cplusplus
 }
