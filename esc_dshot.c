@@ -13,12 +13,12 @@ typedef struct esc_dshot {
 	uint32_t  					tick_bit0_high;		/*!< Number of tick for bit 0 in high level */
 } esc_dshot_t;
 
-static err_code_t _prepare_packet(esc_dshot_handle_t handle, uint16_t throttle, uint16_t *packet)
+static esc_dshot_status_t _prepare_packet(esc_dshot_handle_t handle, uint16_t throttle, uint16_t *packet)
 {
 	/* Check if handle structure is NULL */
 	if (handle == NULL)
 	{
-		return ERR_CODE_NULL_PTR;
+		return ESC_DSHOT_STATUS_INVALID_ARG;
 	}
 
 	uint16_t packet_prepare;
@@ -41,7 +41,7 @@ static err_code_t _prepare_packet(esc_dshot_handle_t handle, uint16_t throttle, 
 
 	*packet = packet_prepare;
 
-	return ERR_CODE_SUCCESS;
+	return ESC_DSHOT_STATUS_SUCCESS;
 }
 
 esc_dshot_handle_t esc_dshot_init(void)
@@ -55,12 +55,12 @@ esc_dshot_handle_t esc_dshot_init(void)
 	return handle;
 }
 
-err_code_t esc_dshot_set_config(esc_dshot_handle_t handle, esc_dshot_cfg_t config)
+esc_dshot_status_t esc_dshot_set_config(esc_dshot_handle_t handle, esc_dshot_cfg_t config)
 {
 	/* Check if handle structure is NULL */
 	if (handle == NULL)
 	{
-		return ERR_CODE_NULL_PTR;
+		return ESC_DSHOT_STATUS_INVALID_ARG;
 	}
 
 	handle->dshot_type = config.dshot_type;
@@ -69,26 +69,26 @@ err_code_t esc_dshot_set_config(esc_dshot_handle_t handle, esc_dshot_cfg_t confi
 	handle->tick_bit1_high = BIT1_HIGH_DUTY * config.tick_bit;
 	handle->tick_bit0_high = BIT0_HIGH_DUTY * config.tick_bit;
 
-	return ERR_CODE_SUCCESS;
+	return ESC_DSHOT_STATUS_SUCCESS;
 }
 
-err_code_t esc_dshot_config(esc_dshot_handle_t handle)
+esc_dshot_status_t esc_dshot_config(esc_dshot_handle_t handle)
 {
 	/* Check if handle structure is NULL */
 	if (handle == NULL)
 	{
-		return ERR_CODE_NULL_PTR;
+		return ESC_DSHOT_STATUS_INVALID_ARG;
 	}
 
-	return ERR_CODE_SUCCESS;
+	return ESC_DSHOT_STATUS_SUCCESS;
 }
 
-err_code_t esc_dshot_prepare_packet(esc_dshot_handle_t handle, uint16_t throttle, uint32_t *packet)
+esc_dshot_status_t esc_dshot_prepare_packet(esc_dshot_handle_t handle, uint16_t throttle, uint32_t *packet)
 {
 	/* Check if handle structure is NULL */
 	if (handle == NULL)
 	{
-		return ERR_CODE_NULL_PTR;
+		return ESC_DSHOT_STATUS_INVALID_ARG;
 	}
 
 	uint16_t raw_packet;
@@ -101,15 +101,15 @@ err_code_t esc_dshot_prepare_packet(esc_dshot_handle_t handle, uint16_t throttle
 		raw_packet <<= 1;
 	}
 
-	return ERR_CODE_SUCCESS;
+	return ESC_DSHOT_STATUS_SUCCESS;
 }
 
-err_code_t esc_dshot_send_packet(esc_dshot_handle_t handle, uint32_t *packet)
+esc_dshot_status_t esc_dshot_send_packet(esc_dshot_handle_t handle, uint32_t *packet)
 {
 	/* Check if handle structure is NULL */
 	if (handle == NULL)
 	{
-		return ERR_CODE_NULL_PTR;
+		return ESC_DSHOT_STATUS_INVALID_ARG;
 	}
 
 	if (handle->send_dma != NULL)
@@ -117,5 +117,5 @@ err_code_t esc_dshot_send_packet(esc_dshot_handle_t handle, uint32_t *packet)
 		handle->send_dma(packet);
 	}
 
-	return ERR_CODE_SUCCESS;
+	return ESC_DSHOT_STATUS_SUCCESS;
 }

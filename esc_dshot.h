@@ -27,11 +27,18 @@
 extern "C" {
 #endif
 
-#include "err_code.h"
+#include "stdint.h"
 
 #define DSHOT_FRAME_SIZE 	16
 
-typedef err_code_t (*esc_dshot_func_send_dma)(uint32_t *buf_send);
+typedef enum 
+{
+	ESC_DSHOT_STATUS_SUCCESS = 0,
+	ESC_DSHOT_STATUS_FAILED,
+	ESC_DSHOT_STATUS_INVALID_ARG
+} esc_dshot_status_t;
+
+typedef esc_dshot_status_t (*esc_dshot_func_send_dma)(uint32_t *buf_send);
 
 /**
  * @brief   Handle structure.
@@ -66,7 +73,7 @@ typedef struct {
  *
  * @return
  *      - Handle structure: Success.
- *      - Others:           Fail.
+ *      - Others: Failed.
  */
 esc_dshot_handle_t esc_dshot_init(void);
 
@@ -77,10 +84,10 @@ esc_dshot_handle_t esc_dshot_init(void);
  * @param   config Configuration structure.
  *
  * @return
- *      - ERR_CODE_SUCCESS: Success.
- *      - Others:           Fail.
+ *      - ESC_DSHOT_STATUS_SUCCESS: Success.
+ *      - Others: Failed.
  */
-err_code_t esc_dshot_set_config(esc_dshot_handle_t handle, esc_dshot_cfg_t config);
+esc_dshot_status_t esc_dshot_set_config(esc_dshot_handle_t handle, esc_dshot_cfg_t config);
 
 /*
  * @brief   Configure Dshot to run.
@@ -88,10 +95,10 @@ err_code_t esc_dshot_set_config(esc_dshot_handle_t handle, esc_dshot_cfg_t confi
  * @param 	handle Handle structure.
  *
  * @return
- *      - ERR_CODE_SUCCESS: Success.
- *      - Others:           Fail.
+ *      - ESC_DSHOT_STATUS_SUCCESS: Success.
+ *      - Others: Failed.
  */
-err_code_t esc_dshot_config(esc_dshot_handle_t handle);
+esc_dshot_status_t esc_dshot_config(esc_dshot_handle_t handle);
 
 /*
  * @brief   Prepare packet DMA.
@@ -101,10 +108,10 @@ err_code_t esc_dshot_config(esc_dshot_handle_t handle);
  * @param 	packet_dma Output packet.
  *
  * @return
- *      - ERR_CODE_SUCCESS: Success.
- *      - Others:           Fail.
+ *      - ESC_DSHOT_STATUS_SUCCESS: Success.
+ *      - Others: Failed.
  */
-err_code_t esc_dshot_prepare_packet(esc_dshot_handle_t handle, uint16_t throttle, uint32_t *packet);
+esc_dshot_status_t esc_dshot_prepare_packet(esc_dshot_handle_t handle, uint16_t throttle, uint32_t *packet);
 
 /*
  * @brief   Send packet DMA.
@@ -113,10 +120,10 @@ err_code_t esc_dshot_prepare_packet(esc_dshot_handle_t handle, uint16_t throttle
  * @param 	packet_dma Packet DMA.
  *
  * @return
- *      - ERR_CODE_SUCCESS: Success.
- *      - Others:           Fail.
+ *      - ESC_DSHOT_STATUS_SUCCESS: Success.
+ *      - Others: Failed.
  */
-err_code_t esc_dshot_send_packet(esc_dshot_handle_t handle, uint32_t *packet);
+esc_dshot_status_t esc_dshot_send_packet(esc_dshot_handle_t handle, uint32_t *packet);
 
 #ifdef __cplusplus
 }
